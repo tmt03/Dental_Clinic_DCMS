@@ -44,23 +44,8 @@
     </head>
 
     <body>
-        <!-- Spinner Start -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-grow text-primary m-1" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-            <div class="spinner-grow text-dark m-1" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-            <div class="spinner-grow text-secondary m-1" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <!-- Spinner End -->
-
-
-
-
+        <!-- Spinner -->
+        <jsp:include page="components/spinner.jsp" />
 
         <!-- Navbar Start -->
         <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
@@ -85,7 +70,7 @@
                     <a href="register.jsp" class="btn btn-primary py-2 px-4 ms-3">Register</a>
                 </c:if> 
                 <c:if test="${sessionScope.account!=null}">
-                    <a href="core?action=BOOK_APPOINTMENT_FORM" class="btn btn-primary py-2 px-4 ms-3">Appointment</a>
+                    <a href="core?action=VIEW_BOOK_APPOINTMENT_FORM" class="btn btn-primary py-2 px-4 ms-3">Appointment</a>
                     <a href="#" onclick="viewPatientAppointment(${sessionScope.account.userID})" class="btn btn-primary py-2 px-4 ms-3">Your Appointment</a>
                     <a href="profile.jsp" class="btn btn-primary py-2 px-4 ms-3">Profile</a>
                     <a href="changePassword.jsp" class="btn btn-primary py-2 px-4 ms-3">Change Password</a>
@@ -115,206 +100,30 @@
         </div>
         <!-- Full Screen Search End -->
 
+        <!-- Hero -->
+        <jsp:include page="components/hero.jsp" />
 
-        <!-- Hero Start -->
-        <div class="container-fluid bg-primary py-5 hero-header mb-5">
-            <div class="row py-3">
-                <div class="col-12 text-center">
-                    <h1 class="display-3 text-white animated zoomIn">Appointment</h1>
-                    <a href="" class="h4 text-white">Home</a>
-                    <i class="far fa-circle text-white px-2"></i>
-                    <a href="" class="h4 text-white">Appointment</a>
-                </div>
-            </div>
-        </div>
-        <!-- Hero End -->
+        <!-- Hiển thị form cho người dùng đã đăng nhập -->
+        <c:if test="${not empty sessionScope.account}">
+            <section>
+                <jsp:include page="components/apptFormPatient.jsp" />
+            </section>
+        </c:if>
 
-
-        <!-- Appointment Start -->
-        <div class="container-fluid bg-primary bg-appointment mb-5 wow fadeInUp" data-wow-delay="0.1s" style="margin-top: 90px;">
-            <div class="container">
-                <div class="row gx-5">
-                    <div class="col-lg-6 py-5">
-                        <div class="py-5">
-                            <h1 class="display-5 text-white mb-4">We Are A Certified and Award Winning Dental Clinic You Can Trust</h1>
-                            <p class="text-white mb-0">Eirmod sed tempor lorem ut dolores. Aliquyam sit sadipscing kasd ipsum. Dolor ea et dolore et at sea ea at dolor, justo ipsum duo rebum sea invidunt voluptua. Eos vero eos vero ea et dolore eirmod et. Dolores diam duo invidunt lorem. Elitr ut dolores magna sit. Sea dolore sanctus sed et. Takimata takimata sanctus sed.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5 wow zoomIn" data-wow-delay="0.6s">
-                            <h1 class="text-white mb-4">Make Appointment</h1>
-                            <!--  <form action="appointment" method="post"> -->
-                            <form action="core" method="post">
-                                <div class="row g-3">
-                                    <input type="hidden" name="action" value="PATIENT_BOOK_APPOINTMENT">
-                                    <input type="hidden" class="form-control bg-light border-0" style="height: 55px;" name="patient" id="patient" value="${sessionScope.account.userID}" readonly>
-                                    <div class="col-12 col-sm-6">
-                                        <select class="form-select bg-light border-0" style="height: 55px;" id="service" name="service" required>
-                                            <option value="" disabled selected>Select A Service</option>
-                                            <c:forEach items="${services}" var="service">
-                                                <option value="${service.serviceID}">${service.serviceName}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
-                                        <select class="form-select bg-light border-0" style="height: 55px;" id="doctor" name="doctor" required>
-                                            <option value="" disabled selected>Select Doctor</option>
-                                            <c:forEach items="${doctors}" var="doctor">
-                                                <option value="${doctor.userID}">${doctor.displayName}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
-                                        <div class="date" id="date" data-target-input="nearest">
-                                            <input type="date" class="form-control bg-light border-0 datetimepicker-input" placeholder="Appointment Date" style="height: 55px;" name="date" id="date" required min="<%= new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()) %>">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
-                                        <select class="form-select bg-light border-0" style="height: 55px;" id="time" name="time" required>
-                                            <option value="7:00 - 9:00">7:00 - 9:00</option>
-                                            <option value="9:00 - 11:00">9:00 - 11:00</option>
-                                            <option value="13:00 - 15:00">13:00 - 15:00</option>
-                                            <option value="15:00 - 17:00">15:00 - 17:00</option>
-                                            <option value="20:00 - 22:00">20:00 - 22:00</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-12">
-                                        <textarea class="form-control bg-light border-0" name="note" id="note" style="height: 100px;" placeholder="Appointment Note" required></textarea>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="g-recaptcha" data-sitekey="6LeerBIqAAAAANsMQuwEvC2L9XqXVW3HDca-XiFk" ></div>
-                                    </div>   
-                                    <div class="col-12">
-                                        <button  class="btn btn-dark w-100 py-3" type="submit">Make Appointment</button>
-                                    </div>
-                                </div>
-                            </form>
-                            <%
-                                String errorMessage = (String) request.getAttribute("errorMessage");
-                                if (errorMessage != null) {
-                            %>
-                            <p style="color: red;"><%= errorMessage %></p>
-                            <%
-                                List<Appointment> conflictingAppointments = (List<Appointment>) request.getAttribute("conflictingAppointments");
-                                if (conflictingAppointments != null) {
-                            %>
-                            <p style="color: red;">Lịch của bác sĩ đã bị trùng vào các giờ sau:</p>
-                            <ul style="color: red;">
-                                <c:forEach items="${conflictingAppointments}" var="appointment">
-                                    <li>${appointment.tbl_time}</li>
-                                    </c:forEach>
-                            </ul>
-                            <%
-                                }
-                            %>
-                            <%
-                                }
-                            %>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Appointment End -->
+        <!-- Hiển thị form cho Guest (chưa đăng nhập) -->
+        <c:if test="${empty sessionScope.account}">
+            <section>
+                <jsp:include page="components/apptFormGuest.jsp" />
+            </section>
+        </c:if>
 
 
-        <!-- Newsletter Start -->
-        <c:choose>
-            <c:when test="${sessionScope.account != null && sessionScope.account.role == 'patient'}">
-                <div class="container-fluid position-relative pt-5 wow fadeInUp" data-wow-delay="0.1s" style="display: none;">
-                    <div class="container">
-                        <div class="bg-primary p-5">
-                            <form class="mx-auto" style="max-width: 600px;">
-                                <div class="input-group">
-                                    <input type="text" class="form-control border-white p-3" placeholder="Your Email">
-                                    <a href="register.jsp" class="btn btn-dark px-4">Sign Up</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </c:when>
-            <c:when test="${sessionScope.account != null && sessionScope.account.role == 'doctor' || sessionScope.account != null && sessionScope.account.role == 'nurse' }">
-                <div class="container-fluid position-relative pt-5 wow fadeInUp" data-wow-delay="0.1s" style="display: none;">
-                    <div class="container">
-                        <div class="bg-primary p-5">
-                            <form class="mx-auto" style="max-width: 600px;">
-                                <div class="input-group">
-                                    <input type="text" class="form-control border-white p-3" placeholder="Your Email">
-                                    <a href="register.jsp" class="btn btn-dark px-4">Sign Up</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </c:when>
-            <c:when test="${sessionScope.account != null && sessionScope.account.role == 'admin'}">
-                <div class="container-fluid position-relative pt-5 wow fadeInUp" data-wow-delay="0.1s" style="display: none;">
-                    <div class="container">
-                        <div class="bg-primary p-5">
-                            <form class="mx-auto" style="max-width: 600px;">
-                                <div class="input-group">
-                                    <input type="text" class="form-control border-white p-3" placeholder="Your Email">
-                                    <a href="register.jsp" class="btn btn-dark px-4">Sign Up</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </c:when>
-            <c:when test="${sessionScope.account == null }">
-                <div class="container-fluid position-relative pt-5 wow fadeInUp" data-wow-delay="0.1s" style="z-index: 1;">
-                    <div class="container">
-                        <div class="bg-primary p-5">
-                            <form class="mx-auto" style="max-width: 600px;">
-                                <div class="input-group">
-                                    <input type="text" class="form-control border-white p-3" placeholder="Your Email">
-                                    <a href="register.jsp" class="btn btn-dark px-4">Sign Up</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </c:when>
-        </c:choose>
-        <!-- Newsletter End -->
+        <!-- Newsletter -->
+        <jsp:include page="components/newLetter.jsp" />
 
 
-        <!-- Footer Start -->
-        <div class="container-fluid bg-dark text-light py-5 wow fadeInUp" data-wow-delay="0.3s">
-            <div class="container pt-5">
-                <div class="row g-5 pt-4">
-                    <div class="col-lg-3 col-md-6">
-                        <h3 class="text-white mb-4">DentCare</h3>
-                        <p>A genuine smile comes from the heart, but a healthy smile needs good dental care</p>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <h3 class="text-white mb-4">Popular Links</h3>
-                        <div class="d-flex flex-column justify-content-start">
-                            <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Home</a>
-
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <h3 class="text-white mb-4">Get In Touch</h3>
-                        <p class="mb-2"><i class="bi bi-geo-alt text-primary me-2"></i>Khu Giáo dục và Đào tạo – Khu Công nghệ cao Hòa Lạc – Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
-                        <p class="mb-2"><i class="bi bi-envelope-open text-primary me-2"></i>daihocfpt@fpt.edu.vn</p>
-                        <p class="mb-0"><i class="bi bi-telephone text-primary me-2"></i>024 7300 1866</p>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <h3 class="text-white mb-4">Follow Us</h3>
-                        <div class="d-flex">
-                            <a class="btn btn-lg btn-primary btn-lg-square rounded me-2" href="#"><i class="fab fa-twitter fw-normal"></i></a>
-                            <a class="btn btn-lg btn-primary btn-lg-square rounded me-2" href="#"><i class="fab fa-facebook-f fw-normal"></i></a>
-                            <a class="btn btn-lg btn-primary btn-lg-square rounded me-2" href="#"><i class="fab fa-linkedin-in fw-normal"></i></a>
-                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-instagram fw-normal"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer End -->
+        <!-- Footer -->
+        <jsp:include page="components/footer.jsp" />
 
 
         <!-- Back to Top -->

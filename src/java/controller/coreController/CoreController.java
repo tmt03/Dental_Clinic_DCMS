@@ -1,7 +1,6 @@
 package controller.coreController;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,12 +29,12 @@ public class CoreController extends HttpServlet {
             request.getRequestDispatcher("home.jsp").forward(request, response);
             return;
         }
-        
+
         //Điều hướng theo action
         handleRequest(request, response, act);
     }
 
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response, String act)throws ServletException, IOException{
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response, String act) throws ServletException, IOException {
         switch (act) {
             case "LOGIN":
                 request.getRequestDispatcher("/login").forward(request, response);
@@ -49,7 +48,10 @@ public class CoreController extends HttpServlet {
             case "PATIENT_BOOK_APPOINTMENT":
                 request.getRequestDispatcher("/appointment").forward(request, response);
                 break;
-            case "BOOK_APPOINTMENT_FORM":
+            case "GUEST_BOOK_APPOINTMENT":
+                request.getRequestDispatcher("/guestService").forward(request, response);
+                break;
+            case "VIEW_BOOK_APPOINTMENT_FORM":
                 request.getRequestDispatcher("/appointment").forward(request, response);
                 break;
             case "NURSE_VALIDATE_APPOINTMENT":
@@ -57,7 +59,7 @@ public class CoreController extends HttpServlet {
                 break;
             case "REJECT_APPOINTMENT":
                 request.getRequestDispatcher("/updateAppointmentStatus").forward(request, response);
-                break;    
+                break;
             case "DOCTOR_APPROVE_APPOINTMENT":
                 request.getRequestDispatcher("/updateAppointmentStatus").forward(request, response);
                 break;
@@ -69,10 +71,10 @@ public class CoreController extends HttpServlet {
                 break;
             case "VIEW_APPOINTMENT_NEED_VALIDATE":
                 request.getRequestDispatcher("/viewMedicalAppointment").forward(request, response);
-                break;   
+                break;
             case "VIEW_APPOINTMENT_NEED_CONFIRM":
                 request.getRequestDispatcher("/viewNeedCf").forward(request, response);
-                break; 
+                break;
             default:
                 throw new AssertionError();
         }

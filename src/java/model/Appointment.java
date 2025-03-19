@@ -19,6 +19,9 @@ public class Appointment {
     private String note;
     private String status;
     private float revenue;
+    private String guestName;      // guestName (varchar(150), NULL)
+    private String guestEmail;     // guestEmail (nvarchar(150), NULL)
+    private String guestMobile;    // guestMobile (varchar(20), NULL)
 
     public int getTbl_appointmentID() {
         return tbl_appointmentID;
@@ -92,6 +95,30 @@ public class Appointment {
         this.patient = patient;
     }
 
+    public String getGuestName() {
+        return guestName;
+    }
+
+    public void setGuestName(String guestName) {
+        this.guestName = guestName;
+    }
+
+    public String getGuestEmail() {
+        return guestEmail;
+    }
+
+    public void setGuestEmail(String guestEmail) {
+        this.guestEmail = guestEmail;
+    }
+
+    public String getGuestMobile() {
+        return guestMobile;
+    }
+
+    public void setGuestMobile(String guestMobile) {
+        this.guestMobile = guestMobile;
+    }
+    
     public Appointment() {
     }
 

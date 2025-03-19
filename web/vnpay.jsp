@@ -57,7 +57,7 @@
                 var amount = a; // Change the amount as desired
                 var bankCode = ""; // Add bank code if needed
                 var language = "vn"; // Default language is Vietnamese
-                
+
                 $.ajax({
                     url: "vnpayajax",
                     type: "POST",
@@ -81,7 +81,7 @@
                     }
                 });
             }
-            
+
             function showError(message) {
                 var alertBox = document.getElementById("alertBox");
                 alertBox.innerHTML = message;
@@ -124,7 +124,17 @@
                 <h6>If you confirmed your information is correct then you will have to pay a deposit = 100.000VND for the appointment. Thank you for selecting our services</h6>
                 <button class="btn-confirm" onclick="payWithVNPay('100000')">Confirm & Pay</button>
             </c:forEach>
-            <a href="appointment" class="btn btn-primary py-2 px-4 ms-3">Cancel & Return to Appointment</a>
+            <!-- Nút Cancel & Return to Appointment -->
+            <c:choose>
+                <c:when test="${empty sessionScope.account}">
+                    <!-- Guest: Chuyển hướng về home1.jsp -->
+                    <a href="home1.jsp" class="btn btn-primary py-2 px-4 ms-3">Cancel & Return to Appointment</a>
+                </c:when>
+                <c:otherwise>
+                    <!-- Patient: Chuyển hướng về core?action=VIEW_BOOK_APPOINTMENT_FORM -->
+                    <a href="core?action=VIEW_BOOK_APPOINTMENT_FORM" class="btn btn-primary py-2 px-4 ms-3">Cancel & Return to Appointment</a>
+                </c:otherwise>
+            </c:choose>
             <div id="alertBox" class="alert alert-danger mt-4" role="alert"></div>
         </div>
 

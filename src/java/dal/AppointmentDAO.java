@@ -415,5 +415,67 @@ public class AppointmentDAO extends DBContext {
         }
         return false;
     }
+    
+    public boolean addAppointmentForGuest(String time, int controllerID, String note, String status, LocalDate date, int serviceID, float revenue, String guestName, String guestEmail, String guestPhone) {
+        String sql = "INSERT INTO Appointment (tbl_time, tbl_controllerID, tbl_note, tbl_status, " +
+                     "tbl_date, tbl_serviceID, tbl_revenue, guestName, guestEmail, guestMobile) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, time);           // tbl_time
+            stmt.setInt(2, controllerID);          // tbl_controllerID
+            stmt.setString(3, note);           // tbl_note (có thể null)
+            stmt.setString(4, status);         // tbl_status
+            stmt.setDate(5, java.sql.Date.valueOf(date)); // tbl_date
+            stmt.setInt(6, serviceID);         // tbl_serviceID
+            stmt.setFloat(7, revenue);         // tbl_revenue
+            stmt.setString(8, guestName);      // guestName
+            stmt.setString(9, guestEmail);     // guestEmail
+            stmt.setString(10, guestPhone);   // guestPhone
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e);
+            return false;
+        }
+    }
+    
+    public List<Appointment> getNewAppointmentsForGuest(String guestEmail) {
+        List<Appointment> appointments = new ArrayList<>();
+        String sql = "SELECT TOP 1 * FROM Appointment WHERE guestEmail = ? ORDER BY tbl_appointmentID DESC";
+
+        try (
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, guestEmail);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Appointment appointment = new Appointment();
+                    appointment.setTbl_appointmentID(rs.getInt("tbl_appointmentID"));
+                    appointment.setTbl_time(rs.getString("tbl_time"));
+                    appointment.setController(String.valueOf("tbl_controllerID"));
+                    appointment.setNote(rs.getString("tbl_note"));
+                    appointment.setStatus(rs.getString("tbl_status"));
+                    appointment.setDate(rs.getString("tbl_date"));
+                    appointment.setServiceName(rs.getString("tbl_serviceID"));
+                    appointment.setRevenue(rs.getFloat("tbl_revenue"));
+                    appointment.setGuestName(rs.getString("guestName"));
+                    appointment.setGuestEmail(rs.getString("guestEmail"));
+                    appointment.setGuestMobile(rs.getString("guestMobile"));
+                    appointments.add(appointment);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e);
+        }
+
+        return appointments;
+    }
 
 }
