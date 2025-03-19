@@ -12,25 +12,36 @@ import java.util.List;
 import dal.AppointmentDAO;
 import model.Appointment;
 import model.User;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static Service.Email.sendTo;
 
+
 /**
- * Servlet xử lý yêu cầu cập nhật trạng thái cuộc hẹn và gửi email thông báo.
- * Hỗ trợ các vai trò: doctor, nurse, patient.
+ * Servlet xử lý yêu cầu cập nhật trạng thái cuộc hẹn và gửi email thông báo. Hỗ
+ * trợ các vai trò: doctor, nurse, patient.
  */
 @WebServlet(name = "UpdateAppointmentStatusServlet", urlPatterns = {"/updateAppointmentStatus"})
 public class UpdateAppointmentStatusServlet extends HttpServlet {
 
     private static final AppointmentDAO dao = new AppointmentDAO();
+    private static final ExecutorService emailExecutor = Executors.newFixedThreadPool(5);
+    
+    @Override
+    public void destroy() {
+        emailExecutor.shutdown();
+        super.destroy();
+    }
 
     /**
      * Xử lý yêu cầu POST để cập nhật trạng thái cuộc hẹn.
      *
-     * @param request  Đối tượng yêu cầu HTTP chứa thông tin cuộc hẹn và trạng thái mới.
+     * @param request Đối tượng yêu cầu HTTP chứa thông tin cuộc hẹn và trạng
+     * thái mới.
      * @param response Đối tượng phản hồi HTTP.
      * @throws ServletException Nếu có lỗi xử lý servlet.
-     * @throws IOException      Nếu có lỗi nhập/xuất.
+     * @throws IOException Nếu có lỗi nhập/xuất.
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -77,18 +88,18 @@ public class UpdateAppointmentStatusServlet extends HttpServlet {
     /**
      * Cập nhật trạng thái cuộc hẹn và gửi email thông báo đến bệnh nhân.
      *
-     * @param request      Đối tượng yêu cầu HTTP để set thông báo.
+     * @param request Đối tượng yêu cầu HTTP để set thông báo.
      * @param appointmentID ID của cuộc hẹn.
-     * @param newStatus    Trạng thái mới (approve, validate, reject).
+     * @param newStatus Trạng thái mới (approve, validate, reject).
      * @param rejectReason Lý do từ chối (nếu có).
      * @param patientEmail Email của bệnh nhân.
      */
     private void updateStatusAndNotify(HttpServletRequest request, int appointmentID, String newStatus,
-                                       String rejectReason, String patientEmail) {
+            String rejectReason, String patientEmail) {
         switch (newStatus) {
             case "accept":
                 dao.updateAppointmentStatus(String.valueOf(appointmentID), newStatus);
-                sendEmail(request, patientEmail, "Appointment Accepted",
+                sendEmailAsync(request, patientEmail, "Appointment Accepted",
                         "Your appointment with ID " + appointmentID + " has been accepted.");
                 break;
 
@@ -103,7 +114,7 @@ public class UpdateAppointmentStatusServlet extends HttpServlet {
                     return;
                 }
                 dao.updateAppointmentStatus(String.valueOf(appointmentID), newStatus);
-                sendEmail(request, patientEmail, "Appointment Rejected",
+                sendEmailAsync(request, patientEmail, "Appointment Rejected",
                         "Your appointment with ID " + appointmentID + " has been rejected. Reason: " + rejectReason);
                 break;
 
@@ -117,37 +128,41 @@ public class UpdateAppointmentStatusServlet extends HttpServlet {
      * Gửi email thông báo và set thông báo tương ứng.
      *
      * @param request Đối tượng yêu cầu HTTP để set thông báo.
-     * @param email   Email của người nhận.
+     * @param email Email của người nhận.
      * @param subject Chủ đề email.
      * @param content Nội dung email.
      */
-    private void sendEmail(HttpServletRequest request, String email, String subject, String content) {
-        boolean emailSent = sendTo(email, subject, content);
-        if (emailSent) {
-            request.setAttribute("msg", "Appointment status updated and email sent successfully");
-        } else {
-            request.setAttribute("msg", "Appointment status updated but failed to send email");
-        }
+    private void sendEmailAsync(HttpServletRequest request, String email, String subject, String content) {
+        // Giả định email được gửi thành công ngay lập tức để không làm chậm request
+        request.setAttribute("msg", "Appointment status updated. Email notification is being sent.");
+
+        // Gửi email bất đồng bộ
+        emailExecutor.submit(() -> {
+            boolean emailSent = sendTo(email, subject, content);
+            if (!emailSent) {
+                // Log lỗi nếu gửi email thất bại (không ảnh hưởng đến request chính)
+                System.err.println("Failed to send email to " + email + " with subject: " + subject);
+            }
+        });
     }
 
     /**
      * Điều hướng người dùng đến trang phù hợp dựa trên vai trò.
      *
-     * @param user     Người dùng hiện tại.
-     * @param request  Đối tượng yêu cầu HTTP.
+     * @param user Người dùng hiện tại.
+     * @param request Đối tượng yêu cầu HTTP.
      * @param response Đối tượng phản hồi HTTP.
      * @throws ServletException Nếu có lỗi xử lý servlet.
-     * @throws IOException      Nếu có lỗi nhập/xuất.
+     * @throws IOException Nếu có lỗi nhập/xuất.
      */
     private void redirectUser(User user, HttpServletRequest request, HttpServletResponse response, String controllerID)
             throws ServletException, IOException {
         String role = user.getRole();
         RequestDispatcher dispatcher;
-        System.out.println(role + "chó chết");
         switch (role) {
             case "doctor":
                 request.setAttribute("controllerID", controllerID);
-                dispatcher = request.getRequestDispatcher("/viewMedicalAppointment");
+                dispatcher = request.getRequestDispatcher("/viewNeedCf");
                 dispatcher.forward(request, response);
                 break;
             case "nurse":

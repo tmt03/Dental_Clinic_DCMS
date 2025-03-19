@@ -46,7 +46,12 @@ public class viewAppointmentNeedConfirmList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String controllerID = request.getParameter("controllerID");
+        
+        String controllerID = (String) request.getAttribute("controllerID");
+        if (controllerID == null || controllerID.trim().isEmpty()) {
+            controllerID = request.getParameter("controllerID");
+        }
+        
         AppointmentDAO ApointmentDAO = new AppointmentDAO();
         List<Appointment> a = ApointmentDAO.getAppointmentsNeedConfirm(Integer.parseInt(controllerID));
         request.setAttribute("appointments", a);
@@ -57,7 +62,7 @@ public class viewAppointmentNeedConfirmList extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        doGet(request, response);
     }
 
     @Override
