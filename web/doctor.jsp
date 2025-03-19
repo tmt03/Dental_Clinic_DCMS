@@ -249,6 +249,7 @@
                     <form id="rejectForm" action="${contextPath}/core" method="post">
                         <input type="hidden" name="action" value="REJECT_APPOINTMENT">
                         <input type="hidden" name="appointmentID" id="rejectAppointmentID">
+                        <input type="hidden" name="controllerID" value="${sessionScope.account.userID}">
                         <input type="hidden" name="newStatus" value="reject">
                         <label for="rejectReason">Reason for Rejection:</label>
                         <textarea name="rejectReason" id="rejectReason" required></textarea>

@@ -62,14 +62,16 @@ public class UpdateAppointmentStatusServlet extends HttpServlet {
         String controllerID = request.getParameter("controllerID");
 
         try {
+            System.out.println("1");
             // Kiểm tra appointmentID hợp lệ
             int appID = Integer.parseInt(appointmentID);
-
+            System.out.println("2");
             // Lấy email của bệnh nhân
             String patientEmail = dao.getEmailByAppointmentID(appID);
             if (patientEmail == null) {
                 throw new IllegalStateException("Patient email not found for appointment ID: " + appID);
             }
+            System.out.println("3");
 
             // Cập nhật trạng thái và gửi email
             updateStatusAndNotify(request, appID, newStatus, rejectReason, patientEmail);
@@ -77,9 +79,11 @@ public class UpdateAppointmentStatusServlet extends HttpServlet {
             // Điều hướng theo vai trò người dùng
             redirectUser(user, request, response, controllerID);
         } catch (NumberFormatException e) {
+            System.out.println("4");
             request.setAttribute("msg", "Invalid appointment ID format.");
             request.getRequestDispatcher("error.jsp").forward(request, response);
         } catch (IllegalStateException e) {
+            System.out.println("5");
             request.setAttribute("msg", e.getMessage());
             request.getRequestDispatcher("error.jsp").forward(request, response);
         }

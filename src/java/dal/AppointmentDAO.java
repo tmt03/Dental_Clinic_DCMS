@@ -225,15 +225,16 @@ public class AppointmentDAO extends DBContext {
 
     public String getEmailByAppointmentID(int appointmentID) {
         String email = null;
-        String sql = "select u.tbl_email from [User] u\n"
-                + "where u.tbl_userID=(select a.tbl_patientID from Appointment a\n"
-                + "where a.tbl_appointmentID=?)";
+        String sql = "SELECT COALESCE(a.guestEmail, u.tbl_email) AS email \n"
+           + "FROM Appointment a \n"
+           + "LEFT JOIN [User] u ON u.tbl_userID = a.tbl_patientID \n"
+           + "WHERE a.tbl_appointmentID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, appointmentID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                email = rs.getString("tbl_email");
+                email = rs.getString("email");
             }
         } catch (SQLException e) {
             e.printStackTrace();
