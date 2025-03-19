@@ -64,7 +64,7 @@ function redirectToProfile() {
 
 function redirectToLogout() {
     if (confirm('Are you sure you want to logout?')) {
-        window.location.href = `${CONTEXT_PATH}/logout`;
+        window.location.href = `${CONTEXT_PATH}/core?action=LOGOUT`;
     }
 }
 

@@ -85,11 +85,11 @@
                     <a href="register.jsp" class="btn btn-primary py-2 px-4 ms-3">Register</a>
                 </c:if> 
                 <c:if test="${sessionScope.account!=null}">
-                    <a href="appointment" class="btn btn-primary py-2 px-4 ms-3">Appointment</a>
+                    <a href="core?action=BOOK_APPOINTMENT_FORM" class="btn btn-primary py-2 px-4 ms-3">Appointment</a>
                     <a href="#" onclick="viewPatientAppointment(${sessionScope.account.userID})" class="btn btn-primary py-2 px-4 ms-3">Your Appointment</a>
                     <a href="profile.jsp" class="btn btn-primary py-2 px-4 ms-3">Profile</a>
                     <a href="changePassword.jsp" class="btn btn-primary py-2 px-4 ms-3">Change Password</a>
-                    <a href="logout" class="btn btn-primary py-2 px-4 ms-3">Logout</a>
+                    <a href="core?action=LOGOUT" class="btn btn-primary py-2 px-4 ms-3">Logout</a>
                 </c:if>
             </div>
         </nav>
@@ -143,8 +143,10 @@
                     <div class="col-lg-6">
                         <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5 wow zoomIn" data-wow-delay="0.6s">
                             <h1 class="text-white mb-4">Make Appointment</h1>
-                            <form action="appointment" method="post">
+                            <!--  <form action="appointment" method="post"> -->
+                            <form action="core" method="post">
                                 <div class="row g-3">
+                                    <input type="hidden" name="action" value="PATIENT_BOOK_APPOINTMENT">
                                     <input type="hidden" class="form-control bg-light border-0" style="height: 55px;" name="patient" id="patient" value="${sessionScope.account.userID}" readonly>
                                     <div class="col-12 col-sm-6">
                                         <select class="form-select bg-light border-0" style="height: 55px;" id="service" name="service" required>

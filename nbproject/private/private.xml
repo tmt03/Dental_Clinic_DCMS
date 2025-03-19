@@ -4,10 +4,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/E:/FPT_University/Ky_7/SWD392/Project/Dental_Clinic_DCMS/web/doctor.jsp</file>
-            <file>file:/E:/FPT_University/Ky_7/SWD392/Project/Dental_Clinic_DCMS/web/yourAppointment.jsp</file>
             <file>file:/E:/FPT_University/Ky_7/SWD392/Project/Dental_Clinic_DCMS/src/java/dal/DAO.java</file>
             <file>file:/E:/FPT_University/Ky_7/SWD392/Project/Dental_Clinic_DCMS/web/js/doctor.js</file>
             <file>file:/E:/FPT_University/Ky_7/SWD392/Project/Dental_Clinic_DCMS/src/java/controller/appointmentController/viewMedicalAppointmentServlet.java</file>
+            <file>file:/E:/FPT_University/Ky_7/SWD392/Project/Dental_Clinic_DCMS/src/java/controller/patientController/viewPatientServlet.java</file>
             <file>file:/E:/FPT_University/Ky_7/SWD392/Project/Dental_Clinic_DCMS/src/java/controller/appointmentController/UpdateAppointmentStatusServlet.java</file>
         </group>
     </open-files>

@@ -237,7 +237,8 @@
         <!-- Login Form -->
         <div class="login-container">
             <h2>Login to DentCare</h2>
-            <form action="login" method="POST" class="animate__animated animate__fadeIn">
+            <form action="core" method="POST" class="animate__animated animate__fadeIn">
+                <input type="hidden" name="action" value="LOGIN">
                 <% if (request.getAttribute("success") != null) { %>
                 <div style="color: green;"><%= request.getAttribute("success") %></div>
                 <% } %>

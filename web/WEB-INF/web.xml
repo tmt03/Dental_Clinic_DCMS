@@ -35,6 +35,10 @@
         <servlet-name>viewAppointmentNeedConfirmList</servlet-name>
         <servlet-class>controller.appointmentController.viewAppointmentNeedConfirmList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CoreController</servlet-name>
+        <servlet-class>controller.coreController.CoreController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewPatientServlet</servlet-name>
         <url-pattern>/viewpatient</url-pattern>
@@ -94,6 +98,10 @@
     <servlet-mapping>
         <servlet-name>viewAppointmentNeedConfirmList</servlet-name>
         <url-pattern>/viewNeedCf</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CoreController</servlet-name>
+        <url-pattern>/core</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -60,7 +60,7 @@
                     <a href="${contextPath}/changePassword.jsp" onclick="redirectToChangePassword()">
                         <i class="ms-Icon" aria-hidden="true">🔒</i> <span>Change Password</span>
                     </a>
-                    <a href="${contextPath}/logout" onclick="redirectToLogout()">
+                    <a href="${contextPath}/core?action=LOGOUT" onclick="redirectToLogout()">
                         <i class="ms-Icon" aria-hidden="true">🚪</i> <span>Logout</span>
                     </a>
                 </c:otherwise>
@@ -160,8 +160,9 @@
                                     <c:choose>
                                         <c:when test="${sessionScope.account.role == 'nurse'}">
                                             <div>
-                                                <form action="${contextPath}/updateAppointmentStatus" method="post">
+                                                <form action="${contextPath}/core" method="post">
                                                     <input type="hidden" name="appointmentID" value="${appointment.tbl_appointmentID}">
+                                                    <input type="hidden" name="action" value="NURSE_VALIDATE_APPOINTMENT">
                                                     <input type="hidden" name="newStatus" value="validate">
                                                     <button type="submit">Validate</button>
                                                 </form>
@@ -182,7 +183,8 @@
 
                 <!-- Modal cho lý do từ chối -->
                 <div id="rejectModal" style="display: none;">
-                    <form id="rejectForm" action="${contextPath}/updateAppointmentStatus" method="post">
+                    <form id="rejectForm" action="${contextPath}/core" method="post">
+                        <input type="hidden" name="action" value="REJECT_APPOINTMENT">
                         <input type="hidden" name="appointmentID" id="rejectAppointmentID">
                         <input type="hidden" name="newStatus" value="reject">
                         <label for="rejectReason">Reason for Rejection:</label>
@@ -227,7 +229,8 @@
                                 <td>
                                     <c:if test="${sessionScope.account.role == 'doctor'}">
                                         <div>
-                                            <form action="${contextPath}/updateAppointmentStatus" method="post">
+                                            <form action="${contextPath}/core" method="post">
+                                                <input type="hidden" name="action" value="DOCTOR_APPROVE_APPOINTMENT">
                                                 <input type="hidden" name="appointmentID" value="${appointment.tbl_appointmentID}">
                                                 <input type="hidden" name="controllerID" value="${sessionScope.account.userID}">
                                                 <input type="hidden" name="newStatus" value="accept">
@@ -243,7 +246,8 @@
                 </table>
                 <!-- Modal cho lý do từ chối -->
                 <div id="rejectModal" style="display: none;">
-                    <form id="rejectForm" action="${contextPath}/updateAppointmentStatus" method="post">
+                    <form id="rejectForm" action="${contextPath}/core" method="post">
+                        <input type="hidden" name="action" value="REJECT_APPOINTMENT">
                         <input type="hidden" name="appointmentID" id="rejectAppointmentID">
                         <input type="hidden" name="newStatus" value="reject">
                         <label for="rejectReason">Reason for Rejection:</label>
@@ -255,17 +259,21 @@
             </c:if>
 
         <!-- Form ẩn để gửi yêu cầu -->
-        <form id="viewPatientForm" action="${contextPath}/viewpatient" method="get">
+        <form id="viewPatientForm" action="${contextPath}/core" method="get">
+            <input type="hidden" name="action" value="VIEW_PATIENT_LIST">
             <input type="submit" value="View Patient" style="display: none;">
         </form>
-        <form id="viewMedicalAppointmentForm" action="${contextPath}/viewMedicalAppointment" method="get">
+        <form id="viewMedicalAppointmentForm" action="${contextPath}/core" method="get">
+            <input type="hidden" name="action" value="VIEW_APPOINTMENT_LIST">
             <input type="hidden" name="controllerID" value="${sessionScope.account.userID}">
             <input type="submit" value="View Medical Appointment" style="display: none;">
         </form>
-        <form id="viewMedicalAppointmentFormForNurse" action="${contextPath}/viewMedicalAppointment" method="post">
+        <form id="viewMedicalAppointmentFormForNurse" action="${contextPath}/core" method="post">
+            <input type="hidden" name="action" value="VIEW_APPOINTMENT_NEED_VALIDATE">
             <input type="submit" value="View Medical Appointment" style="display: none;">
         </form>
-        <form id="viewMedicalAppointmentNeedConfirmForm" action="${contextPath}/viewNeedCf" method="get">
+        <form id="viewMedicalAppointmentNeedConfirmForm" action="${contextPath}/core" method="get">
+            <input type="hidden" name="action" value="VIEW_APPOINTMENT_NEED_CONFIRM">
             <input type="hidden" name="controllerID" value="${sessionScope.account.userID}">
             <input type="submit" value="View Medical Appointment Need Confirm" style="display: none;">
         </form>

@@ -241,7 +241,8 @@
         <!-- Register Form -->
         <div class="register-container">
             <h2>Register to DentCare</h2>
-            <form action="register" method="post" class="animate__animated animate__fadeIn">
+            <form action="core" method="post" class="animate__animated animate__fadeIn">
+                <input type="hidden" name="action" value="REGISTER">
                 <div class="group">
                     <input id="user" type="text" class="input" name="user" placeholder="Create your Username" required>
                 </div>

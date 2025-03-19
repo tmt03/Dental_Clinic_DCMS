@@ -69,11 +69,11 @@
                     <a href="register.jsp" class="btn btn-primary py-2 px-4 ms-3">Register</a>
                 </c:when>
                 <c:otherwise>
-                    <a href="appointment" class="btn btn-primary py-2 px-4 ms-3 active">Appointment</a>
+                    <a href="core?action=BOOK_APPOINTMENT_FORM" class="btn btn-primary py-2 px-4 ms-3">Appointment</a>
                     <a href="#" onclick="viewPatientAppointment(${sessionScope.account.userID})" class="btn btn-primary py-2 px-4 ms-3 active">Your Appointment</a>
                     <a href="profile.jsp" class="btn btn-primary py-2 px-4 ms-3">Profile</a>
                     <a href="changePassword.jsp" class="btn btn-primary py-2 px-4 ms-3">Change Password</a>
-                    <a href="logout" class="btn btn-primary py-2 px-4 ms-3">Logout</a>
+                    <a href="core?action=LOGOUT" class="btn btn-primary py-2 px-4 ms-3">Logout</a>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -87,7 +87,7 @@
                 <h1 class="display-3 text-white animated zoomIn">Appointment</h1>
                 <a href="home1.jsp" class="h4 text-white">Home</a>
                 <i class="far fa-circle text-white px-2"></i>
-                <a href="appointment" class="h4 text-white">Appointment</a>
+                <a href="core?action=BOOK_APPOINTMENT_FORM" class="btn btn-primary py-2 px-4 ms-3">Appointment</a>
             </div>
         </div>
     </div>
