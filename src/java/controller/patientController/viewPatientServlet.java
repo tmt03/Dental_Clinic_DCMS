@@ -38,7 +38,7 @@ public class viewPatientServlet extends HttpServlet {
         PatientDAO patientDAO = new PatientDAO();
         List<User> u = patientDAO.getPatients();
         request.setAttribute("patients", u);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("doctor.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("doctor.jsp?msg=patients");
         dispatcher.forward(request, response);
     }
 

@@ -97,7 +97,7 @@
             </c:if>
 
             <!-- Danh sách bệnh nhân -->
-            <c:if test="${not empty sessionScope.account}">
+            <c:if test="${param.msg == 'patients' and not empty sessionScope.account}">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
