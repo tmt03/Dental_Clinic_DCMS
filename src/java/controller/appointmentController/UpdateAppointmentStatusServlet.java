@@ -64,7 +64,8 @@ public class UpdateAppointmentStatusServlet extends HttpServlet {
         try {
             // Kiểm tra appointmentID hợp lệ
             int appID = Integer.parseInt(appointmentID);
-
+            
+            String docterEmail = dao.getEmaiDocter(controllerID);
             // Lấy email của bệnh nhân
             String patientEmail = dao.getEmailByAppointmentID(appID);
             if (patientEmail == null) {
@@ -72,7 +73,7 @@ public class UpdateAppointmentStatusServlet extends HttpServlet {
             }
 
             // Cập nhật trạng thái và gửi email
-            updateStatusAndNotify(request, appID, newStatus, rejectReason, patientEmail);
+            updateStatusAndNotify(request, appID, newStatus, rejectReason, patientEmail, docterEmail);
 
             // Điều hướng theo vai trò người dùng
             redirectUser(user, request, response, controllerID);
@@ -95,7 +96,7 @@ public class UpdateAppointmentStatusServlet extends HttpServlet {
      * @param patientEmail Email của bệnh nhân.
      */
     private void updateStatusAndNotify(HttpServletRequest request, int appointmentID, String newStatus,
-            String rejectReason, String patientEmail) {
+            String rejectReason, String patientEmail, String docterEmail) {
         switch (newStatus) {
             case "accept":
                 dao.updateAppointmentStatus(String.valueOf(appointmentID), newStatus);
@@ -104,7 +105,10 @@ public class UpdateAppointmentStatusServlet extends HttpServlet {
                 break;
 
             case "validate":
+                System.out.println(docterEmail);
                 dao.updateAppointmentStatus(String.valueOf(appointmentID), newStatus);
+                sendEmailAsync(request,docterEmail, "Appointment Validated",
+                        "Your appointment with ID " + appointmentID + " has been Validated.");
                 request.setAttribute("msg", "Appointment status updated successfully");
                 break;
 

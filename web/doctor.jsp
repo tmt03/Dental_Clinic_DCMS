@@ -163,6 +163,7 @@
                                                 <form action="${contextPath}/core" method="post">
                                                     <input type="hidden" name="appointmentID" value="${appointment.tbl_appointmentID}">
                                                     <input type="hidden" name="action" value="NURSE_VALIDATE_APPOINTMENT">
+                                                    <input type="hidden" name="controllerID" value="${appointment.controller}">
                                                     <input type="hidden" name="newStatus" value="validate">
                                                     <button type="submit">Validate</button>
                                                 </form>
@@ -249,6 +250,7 @@
                     <form id="rejectForm" action="${contextPath}/core" method="post">
                         <input type="hidden" name="action" value="REJECT_APPOINTMENT">
                         <input type="hidden" name="appointmentID" id="rejectAppointmentID">
+                        <input type="hidden" name="controllerID" value="${sessionScope.account.userID}">
                         <input type="hidden" name="newStatus" value="reject">
                         <label for="rejectReason">Reason for Rejection:</label>
                         <textarea name="rejectReason" id="rejectReason" required></textarea>

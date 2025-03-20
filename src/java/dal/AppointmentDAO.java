@@ -225,15 +225,16 @@ public class AppointmentDAO extends DBContext {
 
     public String getEmailByAppointmentID(int appointmentID) {
         String email = null;
-        String sql = "select u.tbl_email from [User] u\n"
-                + "where u.tbl_userID=(select a.tbl_patientID from Appointment a\n"
-                + "where a.tbl_appointmentID=?)";
+        String sql = "SELECT COALESCE(a.guestEmail, u.tbl_email) AS email \n"
+                + "FROM Appointment a \n"
+                + "LEFT JOIN [User] u ON u.tbl_userID = a.tbl_patientID \n"
+                + "WHERE a.tbl_appointmentID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, appointmentID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                email = rs.getString("tbl_email");
+                email = rs.getString("email");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -415,14 +416,14 @@ public class AppointmentDAO extends DBContext {
         }
         return false;
     }
-    
+
     public boolean addAppointmentForGuest(String time, int controllerID, String note, String status, LocalDate date, int serviceID, float revenue, String guestName, String guestEmail, String guestPhone) {
-        String sql = "INSERT INTO Appointment (tbl_time, tbl_controllerID, tbl_note, tbl_status, " +
-                     "tbl_date, tbl_serviceID, tbl_revenue, guestName, guestEmail, guestMobile) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Appointment (tbl_time, tbl_controllerID, tbl_note, tbl_status, "
+                + "tbl_date, tbl_serviceID, tbl_revenue, guestName, guestEmail, guestMobile) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, time);           // tbl_time
             stmt.setInt(2, controllerID);          // tbl_controllerID
@@ -443,13 +444,13 @@ public class AppointmentDAO extends DBContext {
             return false;
         }
     }
-    
+
     public List<Appointment> getNewAppointmentsForGuest(String guestEmail) {
         List<Appointment> appointments = new ArrayList<>();
         String sql = "SELECT TOP 1 * FROM Appointment WHERE guestEmail = ? ORDER BY tbl_appointmentID DESC";
 
         try (
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, guestEmail);
 
@@ -477,5 +478,24 @@ public class AppointmentDAO extends DBContext {
 
         return appointments;
     }
+
+    public String getEmaiDocter(String nameDocter) {
+        String email = null;
+        String sql = "SELECT tbl_email\n"
+                + "FROM [User]\n"
+                + "WHERE tbl_displayName = ?;";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, nameDocter);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                email = rs.getString("tbl_email");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return email;
+    }
+
 
 }
